@@ -28,6 +28,10 @@ namespace SistemaPonchado
             try
             {
                 await _authService.InicializarBaseDatos();
+#if DEBUG
+                // Sembrar datos de desarrollo: 10 usuarios demo con clave 123
+                await _authService.SembrarUsuariosPorDefecto(10);
+#endif
             }
             catch (Exception ex)
             {

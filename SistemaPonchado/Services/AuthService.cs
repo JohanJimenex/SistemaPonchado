@@ -183,6 +183,68 @@ namespace SistemaPonchado.Services
             }
         }
 
+        /// <summary>
+        /// Crea usuarios y empleados de demostración para entorno de desarrollo.
+        /// Genera hasta 'cantidad' usuarios con usuario 'demo1'...'demoN' y contraseña '123'.
+        /// No duplica registros si ya existen.
+        /// </summary>
+        /// <param name="cantidad">Cantidad de usuarios a crear (por defecto 10)</param>
+        public async Task SembrarUsuariosPorDefecto(int cantidad = 10)
+        {
+            try
+            {
+                // Asegurar BD creada
+                await _context.Database.EnsureCreatedAsync();
+
+                for (int i = 1; i <= cantidad; i++)
+                {
+                    string username = $"demo{i}";
+                    string cedula = $"D{i:0000}"; // Única por índice
+
+                    // Si ya existe el usuario demo{i}, saltar
+                    bool usuarioExiste = await _context.Usuarios.AnyAsync(u => u.NombreUsuario == username);
+                    if (usuarioExiste)
+                        continue;
+
+                    // Buscar si existe un empleado con esa cédula (por si se ejecuta varias veces)
+                    var empleado = await _context.Empleados.FirstOrDefaultAsync(e => e.Cedula == cedula);
+                    if (empleado == null)
+                    {
+                        empleado = new Empleado
+                        {
+                            NombreCompleto = $"Empleado Demo {i}",
+                            Cedula = cedula,
+                            Departamento = "DEMO",
+                            Cargo = "Tester",
+                            FechaIngreso = DateTime.Now,
+                            Activo = true
+                        };
+                        _context.Empleados.Add(empleado);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Crear usuario asociado con contraseña 123
+                    var usuario = new Usuario
+                    {
+                        NombreUsuario = username,
+                        Password = BCrypt.Net.BCrypt.HashPassword("123"),
+                        Rol = "Empleado",
+                        RequiereCambioPassword = false,
+                        Activo = true,
+                        EmpleadoId = empleado.Id
+                    };
+
+                    _context.Usuarios.Add(usuario);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sembrando usuarios de desarrollo: {ex.Message}");
+                throw;
+            }
+        }
+
         public void Dispose()
         {
             _context?.Dispose();

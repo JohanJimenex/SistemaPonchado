@@ -136,13 +136,22 @@ namespace SistemaPonchado
             if (usuario.Rol == "Admin")
             {
                 var adminForm = new AdminMainForm(usuario);
-                adminForm.FormClosed += (s, e) => this.Close();
+                adminForm.FormClosed += (s, e) => {
+                    // Al cerrar sesión, volver a mostrar el login
+                    this.Show();
+                    txtPassword.Clear();
+                    txtUsuario.Focus();
+                };
                 adminForm.Show();
             }
             else
             {
                 var empleadoForm = new EmpleadoMainForm(usuario);
-                empleadoForm.FormClosed += (s, e) => this.Close();
+                empleadoForm.FormClosed += (s, e) => {
+                    this.Show();
+                    txtPassword.Clear();
+                    txtUsuario.Focus();
+                };
                 empleadoForm.Show();
             }
         }

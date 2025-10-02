@@ -97,6 +97,32 @@ namespace SistemaPonchado.Services
             return usuario;
         }
 
+        /// <summary>
+        /// Restablece la contraseña del usuario asociado a un empleado
+        /// a los últimos 4 dígitos de su cédula y obliga cambio al próximo login.
+        /// </summary>
+        public async Task<(bool Exito, string? PasswordTemporal)> RestablecerPasswordPorEmpleado(int empleadoId)
+        {
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.EmpleadoId == empleadoId && u.Activo);
+            var empleado = await _context.Empleados.FirstOrDefaultAsync(e => e.Id == empleadoId);
+            if (usuario == null || empleado == null)
+            {
+                return (false, null);
+            }
+
+            string last4 = "1234";
+            if (!string.IsNullOrWhiteSpace(empleado.Cedula))
+            {
+                last4 = empleado.Cedula.Length >= 4 ? empleado.Cedula[^4..] : empleado.Cedula;
+            }
+
+            usuario.Password = BCrypt.Net.BCrypt.HashPassword(last4);
+            usuario.RequiereCambioPassword = true;
+            await _context.SaveChangesAsync();
+
+            return (true, last4);
+        }
+
         public async Task<Usuario?> ObtenerUsuarioPorEmpleadoId(int empleadoId)
         {
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.EmpleadoId == empleadoId);

@@ -153,7 +153,7 @@ namespace SistemaPonchado.Forms
 
                 await _empleadoService.CrearEmpleado(empleado);
 
-                // Intentar obtener el usuario creado para mostrar el username final
+                // Mostrar credenciales en un cuadro con opción de copiar
                 var auth = new AuthService();
                 try
                 {
@@ -161,8 +161,10 @@ namespace SistemaPonchado.Forms
                     var nombreUsuario = usuario?.NombreUsuario ?? GenerarNombreUsuario(empleado.NombreCompleto);
                     var password = empleado.Cedula.Length >= 4 ? empleado.Cedula[^4..] : empleado.Cedula;
 
-                    MessageBox.Show($"Empleado creado exitosamente.\n\nCredenciales de acceso:\nUsuario: {nombreUsuario}\nContraseña: {password}\n\nEl empleado deberá cambiar su contraseña en el primer inicio de sesión.",
-                                  "Empleado Creado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    using (var cred = new CredencialesUsuarioForm(nombreUsuario, password))
+                    {
+                        cred.ShowDialog(this);
+                    }
                 }
                 finally
                 {

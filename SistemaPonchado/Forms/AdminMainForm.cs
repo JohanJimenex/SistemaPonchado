@@ -15,10 +15,9 @@ namespace SistemaPonchado.Forms
 
         private void btnGestionEmpleados_Click(object sender, EventArgs e)
         {
-            var agregarEmpleadoForm = new AgregarEmpleadoForm();
-            if (agregarEmpleadoForm.ShowDialog() == DialogResult.OK)
+            using (var gestion = new GestionEmpleadosForm())
             {
-                MessageBox.Show("Empleado agregado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                gestion.ShowDialog(this);
             }
         }
 

@@ -5,7 +5,7 @@ Un sistema simple para registrar entradas y salidas de empleados usando Windows 
 ## 📋 ¿Qué hace este proyecto?
 
 Este sistema permite:
-- ✅ **Administradores**: Crear empleados, ver todos los registros
+- ✅ **Administradores**: Gestionar empleados (CRUD completo), ver todos los ponchados
 - ✅ **Empleados**: Registrar entrada/salida, ver su historial personal
 - ✅ **Base de datos local**: SQLite para almacenar información
 
@@ -42,6 +42,8 @@ Este sistema permite:
 Las credenciales se generan automáticamente al crear empleados:
 - **Usuario:** Primera letra del nombre + apellido (ej: "Juan Pérez" → `jperez`)
 - **Contraseña:** Últimos 4 dígitos de la cédula
+  
+Al crear un empleado, se muestra un cuadro con las credenciales y un botón **Copiar** para llevar usuario/contraseña al portapapeles.
 
 ## 📁 Estructura del Proyecto
 
@@ -73,6 +75,9 @@ Las ventanas que ve el usuario:
 - `LoginForm` = Pantalla de inicio de sesión
 - `AdminMainForm` = Menú principal del administrador
 - `EmpleadoMainForm` = Menú del empleado
+ - `GestionEmpleadosForm` = CRUD de empleados (listar, buscar, agregar, editar, desactivar, reset clave)
+ - `EditarEmpleadoForm` = Edición de datos de un empleado
+ - `CredencialesUsuarioForm` = Cuadro para mostrar/copiar credenciales generadas
 
 ### 4. **Entity Framework**
 ORM (Object-Relational Mapping) que convierte:
@@ -87,12 +92,17 @@ ORM (Object-Relational Mapping) que convierte:
 3. **Si es Empleado** → Ver menú empleado
 4. **Ponchar** → Registrar entrada o salida según el estado
 5. **Ver datos** → Mostrar registros con paginación
+6. **Cerrar sesión** → Al cerrar el formulario principal, retorna a la pantalla de Login
 
 ## 🔧 Funcionalidades Principales
 
 ### Para Administradores
-- Crear nuevos empleados
-- Ver lista de todos los empleados
+- Gestión de Empleados (CRUD):
+  - Listar y buscar empleados
+  - Agregar empleados (genera credenciales automáticamente y muestra cuadro con botón Copiar)
+  - Editar datos (nombre, cédula, departamento, cargo, activo)
+  - Desactivar empleados (soft-delete)
+  - Restablecer contraseña a los últimos 4 de la cédula y forzar cambio en el próximo inicio de sesión
 - Ver todos los registros de ponchado
 - Sistema de paginación para grandes cantidades de datos
 
@@ -113,6 +123,21 @@ ORM (Object-Relational Mapping) que convierte:
 - **Validación de datos** (verificar entradas del usuario)
 - **Manejo de excepciones** (try-catch)
 - **Encriptación** (BCrypt para passwords)
+
+## 🧑‍💼 Gestión de Empleados (CRUD)
+
+- Acceso: En `AdminMainForm`, botón `Gestión de Empleados`.
+- Listado: Grilla con búsqueda por nombre, cédula o departamento.
+- Agregar: Abre formulario con validaciones. Al guardar, se genera usuario/clave y aparece un cuadro con botón **Copiar**.
+- Editar: Modifica datos del empleado y estado activo.
+- Restablecer contraseña: Botón `Reset` que coloca la clave como los últimos 4 de la cédula y marca el usuario para cambiarla en el próximo login.
+- Desactivar: Marca empleado (y su usuario) como inactivo sin borrar datos.
+
+Archivos relacionados:
+- `Forms/GestionEmpleadosForm.cs` (lista y acciones)
+- `Forms/EditarEmpleadoForm.cs` (edición)
+- `Forms/CredencialesUsuarioForm.cs` (copiar credenciales)
+- `Services/AuthService.cs` (método de restablecimiento de contraseña)
 
 ## 🤝 Contribuir
 

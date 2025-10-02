@@ -1,0 +1,90 @@
+# 🚫 GITIGNORE PARA PROYECTO .NET
+# Este archivo le dice a Git qué archivos/carpetas NO debe incluir en el repositorio
+
+## 📁 Directorios de compilación y salida
+bin/
+obj/
+out/
+
+## 🔧 Archivos de configuración de usuario
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## 📦 Paquetes NuGet
+*.nupkg
+*.snupkg
+packages/
+!packages/build/
+
+## 🛠️ Archivos de Visual Studio
+.vs/
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+
+## 🐛 Archivos de depuración
+*.pdb
+*.log
+*.tmp
+
+## 📱 Archivos específicos de Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## 🍎 Archivos específicos de macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+## 🐧 Archivos específicos de Linux
+*~
+
+## 🗃️ Base de datos SQLite (comentar si quieres incluir la BD en el repo)
+*.db
+*.sqlite
+*.sqlite3
+
+## 🔑 Archivos de configuración sensibles
+appsettings.local.json
+appsettings.*.json
+!appsettings.json
+!appsettings.Development.json
+
+## 📊 Reportes de cobertura de código
+coverage*.json
+coverage*.xml
+coverage*.info
+TestResults/
+
+## 🎯 Archivos de IDE específicos
+.vscode/
+.idea/
+*.swp
+*.swo
+
+## 📝 Archivos de documentación generados automáticamente
+*.docx
+*.pdf
+!README.md
+!LICENSE
+
+## 🚀 Archivos de deployment
+publish/
+*.PublishSettings
+
+## 🔄 Archivos de respaldo
+*.bak
+*.backup
+*.orig
+
+## 📱 Archivos específicos del proyecto
+# Descomenta si necesitas ignorar archivos específicos de tu proyecto
+# MiArchivo.txt
+# configuracion-local.json
